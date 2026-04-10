@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "catalog",
 ]
 
 MIDDLEWARE = [
@@ -96,6 +97,7 @@ LANGUAGE_CODE = "en-us"
 TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
+USE_L18N = True
 
 USE_TZ = True
 
