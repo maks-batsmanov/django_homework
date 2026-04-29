@@ -4,11 +4,10 @@
 
     <main class="container">
         <div class="row text-center">
-            {% for product in products %}
+            {% for product in page_obj %}
             <div class="col-4">
                 <div class="card" style="width: 18rem;">
                     <img src="{{product.image | media_filter}}" alt="{{ product.name }}">
-
                     <div class="card-body">
                         <h5 class="card-title">{{product.name}}</h5>
                         <h1 class="card-title pricing-card-title">{{product.price}} руб.</h1>
@@ -19,5 +18,6 @@
             </div>
             {%endfor%}
         </div>
+        {% include 'catalog/pagination.html' %}
      </main>
 {% endblock %}
