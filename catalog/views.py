@@ -1,6 +1,7 @@
 from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product
+from .forms import AddProductForm
 
 
 def home_view(request):
@@ -22,3 +23,14 @@ def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
     context = {'product': product}
     return render(request, 'catalog/detail.html', context)
+
+def product_create_view(request):
+    if request.method == 'POST':
+        form = AddProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('catalog:home')
+    else:
+        form = AddProductForm()
+
+    return render(request, 'catalog/form_add_product.html', {'form': form})
