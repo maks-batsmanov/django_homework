@@ -1,0 +1,18 @@
+{% extends 'catalog/base.html' %}
+{% load my_tags %}
+{% block content %}
+
+    <div class="container mt-5">
+        <img src="{{product.image | media_filter}}"  width="300" height="400" alt="{{ product.name }}">
+        <h1 class="mb-4">{{ product.name }}</h1>
+        <p>Название продукта: {{product.name}} </p>
+        <p>Дата создания: {{ product.created_at }}</p>
+        <p>Описание: {{ product.description }}</p>
+        <p>Категория: {{ product.category }}</p>
+        <p>Стоимость: {{ product.price }} руб.</p>
+        <p>Дата создания: {{ product.created_at }}</p>
+        <p>Дата изменения: {{ product.update_at }}</p>
+    </div>
+    <a class="btn btn-primary" href="{% url 'catalog:home' %}" role="button">Назад</a>
+
+{% endblock %}
