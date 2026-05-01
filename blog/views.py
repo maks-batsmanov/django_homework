@@ -1,8 +1,22 @@
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, FormView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from blog.forms import AddEntryForm
 from blog.models import BlogEntry
+
+
+class BlogCreateView(CreateView):
+    model = BlogEntry
+    template_name = 'blog/blogentry_create.html'
+    form_class = AddEntryForm
+    success_url = reverse_lazy('blog:list')
+
+
+class BlogUpdateView(UpdateView):
+    model = BlogEntry
+    template_name = 'blog/blogentry_create.html'
+    form_class = AddEntryForm
+    success_url = reverse_lazy('blog:list')
 
 
 class BlogListView(ListView):
@@ -15,8 +29,20 @@ class BlogListView(ListView):
         return queryset
 
 
-class BlogCreateView(CreateView):
+class BlogDetailView(DetailView):
     model = BlogEntry
-    template_name = 'blog/blogentry_create.html'
-    form_class = AddEntryForm
+    template_name = 'blog/blogentry_detail.html'
+    context_object_name = 'entry'
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset=queryset)
+        obj.views += 1
+        obj.save(update_fields=['views'])
+        return obj
+
+
+class BlogDeleteView(DeleteView):
+    model = BlogEntry
+    template_name = 'blog/blogentry_confirm_delete.html'
+    context_object_name = 'entry'
     success_url = reverse_lazy('blog:list')
