@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="container mt-5">
-        <img src="{{entry.preview | media_filter}}"  width="400" height="400" alt="{{ product.name }}">
+        <img src="{{entry.preview | media_filter}}"  width="320" height="400" alt="{{ product.name }}">
         <h1 class="mb-4">{{ entry.header }}</h1>
         <p>Дата создания: {{ entry.created_at }}</p>
         <p>Просмотры: {{ entry.views }}</p>
