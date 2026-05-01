@@ -16,7 +16,9 @@ class BlogUpdateView(UpdateView):
     model = BlogEntry
     template_name = 'blog/blogentry_create.html'
     form_class = AddEntryForm
-    success_url = reverse_lazy('blog:list')
+
+    def get_success_url(self):
+        return reverse_lazy('blog:detail', kwargs={'pk': self.object.pk})
 
 
 class BlogListView(ListView):
