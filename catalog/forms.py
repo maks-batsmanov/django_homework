@@ -19,13 +19,6 @@ class AddProductForm(forms.ModelForm):
         model = Product
         fields = ['name', 'description', 'image', 'category', 'price']
 
-        widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Введите название'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Описание товара'}),
-            'category': forms.Select(attrs={'class': 'form-select'}),
-            'price': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Цена в рублях'}),
-            'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-        }
 
         labels = {
             'name': 'Название',
@@ -34,6 +27,33 @@ class AddProductForm(forms.ModelForm):
             'category': 'Категория',
             'price': 'Цена (₽)',
         }
+
+    def __init__(self, *args, **kwargs):
+        super(AddProductForm, self).__init__(*args, **kwargs)
+
+        self.fields['name'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Введите название'
+        })
+
+        self.fields['description'].widget.attrs.update({
+            'class': 'form-control',
+            'rows': 3,
+            'placeholder': 'Описание товара'
+        })
+
+        self.fields['category'].widget.attrs.update({
+            'class': 'form-select'
+        })
+
+        self.fields['price'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Цена в рублях'
+        })
+
+        self.fields['image'].widget.attrs.update({
+            'class': 'form-control'
+        })
 
 
     def clean_name(self):
@@ -49,6 +69,13 @@ class AddProductForm(forms.ModelForm):
             if word in description.lower():
                 raise ValidationError(f'Описание содержит запрещенное слово "{description}"!')
         return description
+
+    def clean_price(self):
+        price = self.cleaned_data.get('price')
+        if price < 0:
+            raise ValidationError(f'Цена не может быть меньше 0 "{price}"!')
+        return price
+
 
 
 class ContactForm(forms.Form):
