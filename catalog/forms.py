@@ -1,5 +1,18 @@
 from django import forms
 from .models import Product
+from django.core.exceptions import ValidationError
+
+forbidden_words = [
+        'казино',
+        'криптовалюта',
+        'крипта',
+        'биржа',
+        'дешево',
+        'бесплатно',
+        'обман',
+        'полиция',
+        'радар'
+    ]
 
 class AddProductForm(forms.ModelForm):
     class Meta:
@@ -21,6 +34,21 @@ class AddProductForm(forms.ModelForm):
             'category': 'Категория',
             'price': 'Цена (₽)',
         }
+
+
+    def clean_name(self):
+        name = self.cleaned_data.get('name')
+        for word in forbidden_words:
+            if word in name.lower():
+                raise ValidationError(f'Имя содержит запрещенное слово "{name}"!')
+        return name
+
+    def clean_description(self):
+        description = self.cleaned_data.get('description')
+        for word in forbidden_words:
+            if word in description.lower():
+                raise ValidationError(f'Описание содержит запрещенное слово "{description}"!')
+        return description
 
 
 class ContactForm(forms.Form):
