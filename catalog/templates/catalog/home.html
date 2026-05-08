@@ -6,6 +6,7 @@
         <div class="row text-center">
             {% for product in page_obj %}
             <div class="col-4">
+
                 <div class="card" style="width: 18rem;">
                     <img src="{{product.image | media_filter}}" alt="{{ product.name }}">
                     <div class="card-body">
@@ -15,6 +16,7 @@
                         <a href="{% url 'catalog:product_detail' product.pk %}" class="btn btn-lg btn-block btn-outline-primary">Детали</a>
                     </div>
                 </div>
+
             </div>
             {%endfor%}
         </div>
