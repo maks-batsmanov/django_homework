@@ -1,4 +1,4 @@
-from django.conf.global_settings import MEDIA_URL
+from django.conf.global_settings import MEDIA_URL, AUTH_USER_MODEL
 from dotenv import load_dotenv
 from pathlib import Path
 import os
@@ -33,6 +33,7 @@ INSTALLED_APPS = [
 
     "catalog",
     "blog",
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -121,3 +122,4 @@ STATIC_URL = "static/"
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+AUTH_USER_MODEL = 'users.CustomUser'
