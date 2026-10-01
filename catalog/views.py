@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, FormView, CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 from .models import Product
@@ -15,7 +16,7 @@ class ProductListView(ListView):
     paginate_by = 6
 
 
-class ContactsView(FormView):
+class ContactsView(LoginRequiredMixin, FormView):
     model = Product
     template_name = 'catalog/contacts.html'
     form_class = ContactForm
@@ -29,7 +30,7 @@ class ContactsView(FormView):
         return HttpResponse(f'Спасибо, {name}! Ваше сообщение получено.')
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(LoginRequiredMixin, DetailView):
     model = Product
     template_name = 'catalog/detail.html'
     context_object_name = 'product'
@@ -45,7 +46,7 @@ def product_create_view(request):
     return render(request, 'catalog/form_add_product.html', {'form': form})
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     template_name = 'catalog/form_add_product.html'
     form_class = AddProductForm
