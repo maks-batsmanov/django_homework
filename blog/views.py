@@ -3,25 +3,10 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 
 from blog.forms import AddEntryForm
 from blog.models import BlogEntry
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class BlogCreateView(CreateView):
-    model = BlogEntry
-    template_name = 'blog/blogentry_create.html'
-    form_class = AddEntryForm
-    success_url = reverse_lazy('blog:list')
-
-
-class BlogUpdateView(UpdateView):
-    model = BlogEntry
-    template_name = 'blog/blogentry_create.html'
-    form_class = AddEntryForm
-
-    def get_success_url(self):
-        return reverse_lazy('blog:detail', kwargs={'pk': self.object.pk})
-
-
-class BlogListView(ListView):
+class BlogListView(LoginRequiredMixin, ListView):
     model = BlogEntry
 
     def get_queryset(self):
@@ -31,20 +16,36 @@ class BlogListView(ListView):
         return queryset
 
 
-class BlogDetailView(DetailView):
+class BlogCreateView(LoginRequiredMixin, CreateView):
     model = BlogEntry
-    template_name = 'blog/blogentry_detail.html'
-    context_object_name = 'entry'
+    template_name = "blog/blogentry_create.html"
+    form_class = AddEntryForm
+    success_url = reverse_lazy("blog:list")
+
+
+class BlogUpdateView(LoginRequiredMixin, UpdateView):
+    model = BlogEntry
+    template_name = "blog/blogentry_create.html"
+    form_class = AddEntryForm
+
+    def get_success_url(self):
+        return reverse_lazy("blog:detail", kwargs={"pk": self.object.pk})
+
+
+class BlogDetailView(LoginRequiredMixin, DetailView):
+    model = BlogEntry
+    template_name = "blog/blogentry_detail.html"
+    context_object_name = "entry"
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset=queryset)
         obj.views += 1
-        obj.save(update_fields=['views'])
+        obj.save(update_fields=["views"])
         return obj
 
 
-class BlogDeleteView(DeleteView):
+class BlogDeleteView(LoginRequiredMixin, DeleteView):
     model = BlogEntry
-    template_name = 'blog/blogentry_confirm_delete.html'
-    context_object_name = 'entry'
-    success_url = reverse_lazy('blog:list')
+    template_name = "blog/blogentry_confirm_delete.html"
+    context_object_name = "entry"
+    success_url = reverse_lazy("blog:list")
