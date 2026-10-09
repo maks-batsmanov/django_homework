@@ -5,6 +5,11 @@ from .forms import CustomUserCreationForm
 from django.core.mail import send_mail
 from django.contrib.auth import login
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import UpdateView
+from .forms import CustomUserCreationForm, CustomUserUpdateForm
+
+
 class RegisterView(FormView):
     form_class = CustomUserCreationForm
     template_name = 'users/register.html'
@@ -26,3 +31,12 @@ class RegisterView(FormView):
     def form_invalid(self, form):
         print("ОШИБКИ ФОРМЫ:", form.errors)
         return super().form_invalid(form)
+
+
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+    form_class = CustomUserUpdateForm
+    template_name = "users/profile_form.html"
+    success_url = reverse_lazy("catalog:home")
+
+    def get_object(self, queryset=None):
+        return self.request.user
