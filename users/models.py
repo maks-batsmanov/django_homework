@@ -6,8 +6,8 @@ class CustomUser(AbstractUser):
     username = None
     email = models.EmailField(unique=True)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True, help_text='Загрузите свой аватар')
-    phone_number = models.CharField(max_length=20, blank=True, help_text='Введите номер телефона')
-    country = models.CharField(max_length=50, blank=True, help_text='Укажите страну')
+    phone_number = models.CharField(max_length=20, default='Не указан', blank=True, help_text='Введите номер телефона')
+    country = models.CharField(max_length=50, default='Не указана', blank=True, help_text='Укажите страну')
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

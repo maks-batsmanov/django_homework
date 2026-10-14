@@ -1,7 +1,7 @@
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import reverse_lazy
 from django.urls import path
-from .views import RegisterView
+from .views import RegisterView, ProfileUpdateView
 
 app_name = 'users'
 
