@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 class CustomUser(AbstractUser):
-    username = None
+    username = models.CharField(max_length=20, default='Не указано', blank=True, help_text='Укажите имя')
     email = models.EmailField(unique=True)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True, help_text='Загрузите свой аватар')
     phone_number = models.CharField(max_length=20, default='Не указан', blank=True, help_text='Введите номер телефона')
