@@ -1,7 +1,7 @@
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, FormView, CreateView, DeleteView
+from django.views.generic import ListView, DetailView, FormView, CreateView, DeleteView, View
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 
@@ -58,3 +58,13 @@ class ProductDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'catalog/delete_product.html'
     context_object_name = 'product'
     success_url = reverse_lazy('catalog:home')
+
+
+class ProductPublicationStatusToggle(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'catalog.can_unpublish_product'
+
+    def post(self, request, pk):
+        product = get_object_or_404(Product, pk=pk)
+        product.publication_status = not product.publication_status
+        product.save()
+        return redirect('catalog:product_detail', pk=pk)
