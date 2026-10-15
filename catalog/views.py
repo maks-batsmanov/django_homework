@@ -53,11 +53,12 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('catalog:form_add_product')
 
 
-class ProductDeleteView(LoginRequiredMixin, DeleteView):
+class ProductDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Product
     template_name = 'catalog/delete_product.html'
     context_object_name = 'product'
     success_url = reverse_lazy('catalog:home')
+    permission_required = 'catalog.delete_product'
 
 
 class ProductPublicationStatusToggle(LoginRequiredMixin, PermissionRequiredMixin, View):
