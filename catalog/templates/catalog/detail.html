@@ -14,5 +14,5 @@
         <p>Дата изменения: {{ product.update_at }}</p>
     </div>
     <a class="btn btn-primary" href="{% url 'catalog:home' %}" role="button">Назад</a>
-
+    <a class="btn btn-danger" href="{% url 'catalog:product_delete' product.pk %}" role="button">Удалить</a>
 {% endblock %}

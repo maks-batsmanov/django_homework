@@ -1,8 +1,8 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, FormView, CreateView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView, DetailView, FormView, CreateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 
 from .models import Product
@@ -51,3 +51,10 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
     template_name = 'catalog/form_add_product.html'
     form_class = AddProductForm
     success_url = reverse_lazy('catalog:form_add_product')
+
+
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
+    model = Product
+    template_name = 'catalog/delete_product.html'
+    context_object_name = 'product'
+    success_url = reverse_lazy('catalog:home')
