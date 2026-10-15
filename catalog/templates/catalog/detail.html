@@ -13,6 +13,7 @@
         <p>Дата создания: {{ product.created_at }}</p>
         <p>Дата изменения: {{ product.update_at }}</p>
         <p>Статус Публикации: {{ product.publication_status }}</p>
+        <p>Владелец: {{ product.owner.email }}</p>
     </div>
 
     {% if perms.catalog.change_product %}
@@ -26,21 +27,30 @@
         </p>
     {% endif %}
 
+    {% if product.owner == user %}
+        <a href="{% url 'catalog:product_update' product.pk %}" class="btn btn-secondary">Редактировать</a>
+    {% endif %}
 
-    <form method="post" action="{% url 'catalog:product_publication_toggle' product.pk %}" class="d-inline">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-warning">
-            ❌ Снять с публикации
-        </button>
+    {% if product.publication_status == True %}
+        <form method="post" action="{% url 'catalog:product_publication_toggle' product.pk %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-warning">
+                ❌ Снять с публикации
+            </button>
+    {% endif %}
+
+    {% if product.publication_status == False %}
 
         <button type="submit" class="btn btn-success">
             ✅ Опубликовать
         </button>
+        </form>
+    {% endif %}
 
-    </form>
 
-
-    <a class="btn btn-primary" href="{% url 'catalog:home' %}" role="button">Назад</a>
-    <a class="btn btn-danger" href="{% url 'catalog:product_delete' product.pk %}" role="button">Удалить</a>
+    {% if product.owner == user or 'Product moderator' in user.groups.all|join:", " %}
+        <a href="{% url 'catalog:product_delete' product.pk %}" class="btn btn-danger">Удалить</a>
+    {% endif %}
+        <a class="btn btn-primary" href="{% url 'catalog:home' %}" role="button">Назад</a>
 
 {% endblock %}

@@ -1,9 +1,8 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, FormView, CreateView, DeleteView, View
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-
+from django.views.generic import ListView, DetailView, FormView, CreateView, DeleteView, View, UpdateView
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 
 from .models import Product
 from .forms import AddProductForm, ContactForm
@@ -50,20 +49,24 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     template_name = 'catalog/form_add_product.html'
     form_class = AddProductForm
-    success_url = reverse_lazy('catalog:form_add_product')
+    success_url = reverse_lazy('catalog:home')
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
         return super().form_valid(form)
 
 
-class ProductDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Product
     template_name = 'catalog/delete_product.html'
     context_object_name = 'product'
     success_url = reverse_lazy('catalog:home')
-    permission_required = 'catalog.delete_product'
 
+    def test_func(self):
+        product = self.get_object()
+        is_owner = product.owner == self.request.user
+        is_moderator = self.request.user.groups.filter(name='Product moderator').exists()
+        return is_owner or is_moderator
 
 class ProductPublicationStatusToggle(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = 'catalog.can_unpublish_product'
@@ -73,3 +76,16 @@ class ProductPublicationStatusToggle(LoginRequiredMixin, PermissionRequiredMixin
         product.publication_status = not product.publication_status
         product.save()
         return redirect('catalog:product_detail', pk=pk)
+
+
+class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Product
+    template_name = 'catalog/form_add_product.html'
+    form_class = AddProductForm
+
+    def test_func(self):
+        product = self.get_object()
+        return product.owner == self.request.user
+
+    def get_success_url(self):
+        return reverse_lazy('catalog:product_detail', kwargs={"pk": self.object.pk})
