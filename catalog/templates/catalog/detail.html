@@ -26,23 +26,21 @@
         </p>
     {% endif %}
 
-{% if perms.catalog.can_unpublish_product %}
+
     <form method="post" action="{% url 'catalog:product_publication_toggle' product.pk %}" class="d-inline">
         {% csrf_token %}
-        {% if product.publication_status %}
-            <button type="submit" class="btn btn-warning">
-                ❌ Снять с публикации
-            </button>
-        {% else %}
-            <button type="submit" class="btn btn-success">
-                ✅ Опубликовать
-            </button>
-        {% endif %}
+        <button type="submit" class="btn btn-warning">
+            ❌ Снять с публикации
+        </button>
+
+        <button type="submit" class="btn btn-success">
+            ✅ Опубликовать
+        </button>
+
     </form>
-{% endif %}
+
 
     <a class="btn btn-primary" href="{% url 'catalog:home' %}" role="button">Назад</a>
-    {% if perms.catalog.can_delete %}
-        <a class="btn btn-danger" href="{% url 'catalog:product_delete' product.pk %}" role="button">Удалить</a>
-    {% endif %}
+    <a class="btn btn-danger" href="{% url 'catalog:product_delete' product.pk %}" role="button">Удалить</a>
+
 {% endblock %}
